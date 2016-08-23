@@ -61,6 +61,9 @@ public class Field
             case Bool:
                 o.put(typeKey,"bool");
                 break;
+            default:
+                o.put(typeKey,"ERROR_TYPE");
+                break;
         }
         o.put(isArrayKey,isArray);
         return o;

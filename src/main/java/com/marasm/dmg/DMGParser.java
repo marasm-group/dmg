@@ -37,6 +37,7 @@ public class DMGParser
     }
     public DMGParser(String data)
     {
+        data = data.trim();
         if (data.startsWith("{") || data.startsWith("["))
         {
             init(data,DataType.JSON);
@@ -48,5 +49,9 @@ public class DMGParser
             return;
         }
         Log.e(this,"Failed to determine data type automatically!");
+    }
+    public void generate(Generator gen)
+    {
+        gen.generate(objects);
     }
 }

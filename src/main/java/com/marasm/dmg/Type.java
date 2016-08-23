@@ -10,5 +10,8 @@ public enum Type
     Number,// A numeric value (used if auto recognition is disabled)
     String,// A String value
     Object,// A complex object value
-    Bool   // A boolean value
+    Bool,  // A boolean value
+
+    ERROR_TYPE //something went wrong
+
 }

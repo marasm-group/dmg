@@ -3,11 +3,13 @@
  */
 package com.marasm.dmg;
 
+import com.marasm.dmg.java.JavaGenerator;
 import org.apache.commons.cli.*;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class DMG_Main
 {
@@ -40,6 +42,17 @@ public class DMG_Main
         }
         parse();
     }
+    static class DummyGenerator implements Generator
+    {
+        public void generate(ArrayList<DMGObject> objectList)
+        {
+            System.out.println("Parsed data:");
+            for (DMGObject obj : objectList)
+            {
+                System.out.println(obj.name+":\n"+obj.toString(2));
+            }
+        }
+    }
     static void parse()
     {
         if (file == null){
@@ -49,14 +62,12 @@ public class DMG_Main
         DMGParser parser = null;
         try {
             parser = new DMGParser(new FileInputStream(file));
+            parser.generate(new JavaGenerator());
         } catch (IOException e) {
             e.printStackTrace();
             Log.e(new DMG_Main(),"failed to open '"+file+"'");
         }
-        System.out.println("Parsed data:");
-        for (DMGObject obj : parser.objects)
-        {
-            System.out.println(obj.name+":\n"+obj.toString(2));
-        }
+
     }
+
 }

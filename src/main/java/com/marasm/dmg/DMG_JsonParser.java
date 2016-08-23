@@ -9,7 +9,7 @@ import java.util.Set;
 /**
  * Created by Sergey Rump on 23.08.2016.
  */
-public class DMG_JsonParser
+class DMG_JsonParser
 {
     ArrayList<DMGObject> objects = new ArrayList<>();
     public DMG_JsonParser(String data)
@@ -83,7 +83,7 @@ public class DMG_JsonParser
             return new Field(name, Type.Bool,false);
         }
         Log.e(this,"Failed to parse type of '"+name+"' <=> "+o);
-        return null;
+        return new Field(name, Type.ERROR_TYPE, false);
     }
 
 

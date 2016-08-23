@@ -1,1 +1,1 @@
-{"intField":1,"floatField":1.1,"boolField":true,"stringField":"ThisIsString","objectField":{"field1":"111","field2":1,"field3":false}}
+{"intField":1,"floatField":1.1,"boolField":true,"stringField":"ThisIsString","objectField":{"field1":"111","field2":1,"field3":false},"primitiveArrayField":["0","string","other"],"objectArrayField":[{"f0":0,"f1":"Value"}]}
