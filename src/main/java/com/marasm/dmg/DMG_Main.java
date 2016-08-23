@@ -53,9 +53,10 @@ public class DMG_Main
             e.printStackTrace();
             Log.e(new DMG_Main(),"failed to open '"+file+"'");
         }
+        System.out.println("Parsed data:");
         for (DMGObject obj : parser.objects)
         {
-            System.out.println("\n"+obj.toString(2));
+            System.out.println(obj.name+":\n"+obj.toString(2));
         }
     }
 }

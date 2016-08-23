@@ -36,6 +36,7 @@ public class Field
     {
         JSONObject o = new JSONObject();
         String typeKey = "type";
+        String classKey = "class";
         String objectKey = "object";
         String isArrayKey = "array";
         switch (type)
@@ -43,6 +44,7 @@ public class Field
             case Object:
                 o.put(typeKey,"Object");
                 o.put(objectKey,object.toJSON());
+                o.put(classKey,object.name);
                 break;
             case String:
                 o.put(typeKey,"string");
