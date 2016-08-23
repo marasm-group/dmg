@@ -1,8 +1,11 @@
 package com.marasm.dmg;
 
+import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Set;
 
@@ -27,6 +30,10 @@ public class DMGParser
     public DMGParser(String data,DataType dataType)
     {
         this.init(data,dataType);
+    }
+    public DMGParser(InputStream stream) throws IOException
+    {
+        this(IOUtils.toString(stream, Utils.getEncoding()));
     }
     public DMGParser(String data)
     {

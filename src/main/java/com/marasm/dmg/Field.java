@@ -2,9 +2,6 @@ package com.marasm.dmg;
 
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 /**
  * Created by Sergey Rump on 19.08.2016.
  */
