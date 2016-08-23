@@ -1,9 +1,6 @@
 package com.marasm.dmg.java;
 
 import com.marasm.dmg.*;
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 
 /**
@@ -63,7 +60,6 @@ public class JavaGenerator implements Generator
     {
         append(f.name+" = new ArrayList<"+type(f)+">();");
         append("try{");
-        JSONArray arr;
         append("for (int i = 0; i< json.getJSONArray(\""+f.name+"\").length();i++){\n");
         switch (f.type)
         {

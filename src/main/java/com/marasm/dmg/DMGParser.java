@@ -1,13 +1,9 @@
 package com.marasm.dmg;
 
 import org.apache.commons.io.IOUtils;
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Set;
 
 /**
  * Created by Sergey Rump on 19.08.2016.
