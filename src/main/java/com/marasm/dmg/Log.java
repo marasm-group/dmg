@@ -1,7 +1,7 @@
 package com.marasm.dmg;
 
 /**
- * Created by vhq473 on 23.08.2016.
+ * Created by Sergey Rump on 23.08.2016.
  */
 public class Log
 {

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Set;
 
 /**
- * Created by vhq473 on 23.08.2016.
+ * Created by Sergey Rump on 23.08.2016.
  */
 public class DMG_JsonParser
 {

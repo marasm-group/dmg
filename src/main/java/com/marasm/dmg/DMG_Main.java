@@ -1,5 +1,5 @@
 /**
- * Created by vhq473 on 19.08.2016.
+ * Created by Sergey Rump on 19.08.2016.
  */
 package com.marasm.dmg;
 public class DMG_Main

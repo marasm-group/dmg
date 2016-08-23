@@ -5,7 +5,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 /**
- * Created by vhq473 on 19.08.2016.
+ * Created by Sergey Rump on 19.08.2016.
  */
 public class DMGObject
 {

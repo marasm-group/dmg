@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 /**
- * Created by vhq473 on 19.08.2016.
+ * Created by Sergey Rump on 19.08.2016.
  */
 public class Field
 {
