@@ -24,6 +24,10 @@ public class DMGObject
     }
     public String toString()
     {
-        return toJSON().toString(2);
+        return toJSON().toString();
+    }
+    public String toString(int indentFactor)
+    {
+        return toJSON().toString(indentFactor);
     }
 }

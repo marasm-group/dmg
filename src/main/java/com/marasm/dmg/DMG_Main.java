@@ -11,7 +11,7 @@ public class DMG_Main
             DMGParser parser = new DMGParser(str);
             for (DMGObject obj : parser.objects)
             {
-                System.out.println("\n"+obj.toString());
+                System.out.println("\n"+obj.toString(2));
             }
         }
     }

@@ -70,5 +70,9 @@ public class Field
     {
         return toJSON().toString();
     }
+    public String toString(int indentFactor)
+    {
+        return toJSON().toString(indentFactor);
+    }
 
 }
