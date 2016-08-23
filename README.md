@@ -1,8 +1,10 @@
 # Data Model Generator
 # Usage
-dmg -f <path/to/your/example/data/file>
+dmg -f path/to/your/example/data/file
+
 or
-dmg -file <path/to/your/example/data/file>
+
+dmg -file path/to/your/example/data/file
 
 ## Installation
 Requirements: 
