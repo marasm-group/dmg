@@ -6,7 +6,7 @@
 
     <groupId>dmg</groupId>
     <artifactId>dmg</artifactId>
-    <version>0.2-SNAPSHOT</version>
+    <version>0.1 alpha</version>
     <dependencies>
         <dependency>
             <groupId>org.json</groupId>

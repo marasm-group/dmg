@@ -35,6 +35,12 @@ public class DMG_Main
             formatter.printHelp("dmg", options);
             System.exit(127);
         }
+        if(cmd.hasOption("help") || cmd.hasOption("h") || cmd.getOptions().length == 0)
+        {
+            HelpFormatter formatter = new HelpFormatter();
+            formatter.printHelp("dmg", options);
+            System.exit(0);
+        }
         if(cmd.hasOption("version"))
         {
             System.out.println("dmg version: "+Utils.getVersion());
