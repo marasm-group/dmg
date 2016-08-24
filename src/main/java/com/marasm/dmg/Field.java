@@ -77,4 +77,8 @@ public class Field
         return toJSON().toString(indentFactor);
     }
 
+    public boolean nameAndTypeEquals(Field f)
+    {
+        return name.equals(f.name) && type.equals(f.type);
+    }
 }

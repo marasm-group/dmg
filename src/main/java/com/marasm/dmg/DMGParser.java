@@ -18,6 +18,9 @@ public class DMGParser
             case JSON:
                 objects = new DMG_JsonParser(data).objects;
                 break;
+            case XML:
+                objects = new DMG_XMLParser(data).objects;
+                break;
             default:
                 System.out.println("ERROR: Unknown data type '"+dataType+"'");
                 break;

@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<company id="0">
+	<staff id="1001">
+		<firstname>yong</firstname>
+		<lastname>mook kim</lastname>
+		<nickname>mkyong</nickname>
+		<salary>100000.0</salary>
+		<booleanValue>false</booleanValue>
+	</staff>
+	<staff id="2001">
+		<firstname>low</firstname>
+		<lastname>yin fong</lastname>
+		<nickname>fong fong</nickname>
+		<salary>200000.0</salary>
+		<booleanValue>true</booleanValue>
+	</staff>
+	<name>hello</name>
+	<name>world</name>
+	<name>!!!</name>
+	<id>0</id>	
+</company>
