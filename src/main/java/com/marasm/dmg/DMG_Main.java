@@ -37,7 +37,7 @@ public class DMG_Main
         }
         if(cmd.hasOption("version"))
         {
-            System.out.println("mvm version: "+Utils.getVersion());
+            System.out.println("dmg version: "+Utils.getVersion());
             System.exit(0);
         }
         if(cmd.hasOption("file") || cmd.hasOption("f"))
