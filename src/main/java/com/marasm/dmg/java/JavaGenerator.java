@@ -38,7 +38,7 @@ public class JavaGenerator implements Generator
         {
             if (f.isArray)
             {
-                append("ArrayList<"+type(f)+"> "+f.name+";");
+                append("ArrayList<"+type(f,true)+"> "+f.name+";");
             }
             else
             {
@@ -99,7 +99,7 @@ public class JavaGenerator implements Generator
     }
     void from_json_processFieldArray(Field f)
     {
-        append(f.name+" = new ArrayList<"+type(f)+">();");
+        append(f.name+" = new ArrayList<"+type(f,true)+">();");
         append("try{");
         append("JSONArray "+tmp_arr+" = json.getJSONArray(\"" + f.name + "\");");
         append("for (int i = 0; i< "+tmp_arr+".length();i++)\n{");
@@ -134,7 +134,7 @@ public class JavaGenerator implements Generator
     }
     void to_json_processFieldArray(Field f)
     {
-        append(f.name+" = new ArrayList<"+type(f)+">();");
+        append(f.name+" = new ArrayList<"+type(f,true)+">();");
         append("try{");
         append("JSONArray "+tmp_arr+" = new JSONArray();");
         append("for (int i = 0; i< "+f.name+".size();i++)\n{\n");
@@ -220,8 +220,11 @@ public class JavaGenerator implements Generator
         }
     }
 
-
     public String type(Field f)
+    {
+        return type(f,false);
+    }
+    public String type(Field f, boolean array)
     {
         switch (f.type)
         {
@@ -230,8 +233,16 @@ public class JavaGenerator implements Generator
             case String:
                 return "String";
             case Int:
+                if (array)
+                {
+                    return "Integer";
+                }
                 return "int";
             case Real:
+                if (array)
+                {
+                    return "Double";
+                }
                 return "double";
             case Number:
                 return "BigDecimal";
@@ -299,5 +310,5 @@ public class JavaGenerator implements Generator
     {
         stream.write(result.getBytes());
     }
-
+    
 }
