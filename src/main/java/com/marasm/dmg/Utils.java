@@ -5,6 +5,7 @@ package com.marasm.dmg;
  */
 public class Utils
 {
+    public static boolean forceNumber = false;
     public static String getVersion()
     {
         DMGObject object = new DMGObject();

@@ -16,6 +16,7 @@ import java.util.Collection;
 public class DMG_Main
 {
     static String file = null;
+    static String json = null;
     static Collection<Feature> features = new ArrayList<>();
     public static void main(String[] args)
     {
@@ -23,6 +24,8 @@ public class DMG_Main
         options.addOption("h","help",false,"print help");
         options.addOption("version",false,"print version number and exit");
         options.addOption("f","file",true,"file to process");
+        options.addOption("json",true,"single-line json string to process");
+        options.addOption("forceNumber",false,"use 'Number' data type instead of 'Int' or 'Real'");
         CommandLineParser parser = new DefaultParser();
         CommandLine cmd = null;
         try {
@@ -42,6 +45,14 @@ public class DMG_Main
             String newfile = cmd.getOptionValue("file");
             if (newfile == null){newfile = cmd.getOptionValue("f");}
             file = newfile;
+        }
+        if(cmd.hasOption("json"))
+        {
+            json = cmd.getOptionValue("json");
+        }
+        if(cmd.hasOption("forceNumber"))
+        {
+            Utils.forceNumber = true;
         }
         features.add(Feature.from_json);
         features.add(Feature.to_json);
@@ -68,16 +79,28 @@ public class DMG_Main
     }
     static void parse()
     {
-        if (file == null){
-            Log.e(new DMG_Main(),"No file specified");
+        if (file == null && json == null)
+        {
+            Log.e(new DMG_Main(),"No file or data specified");
+            System.exit(-1);
         }
 
         DMGParser parser = null;
         try {
-            parser = new DMGParser(new FileInputStream(file));
-            Generator gen = new JavaGenerator();
-            gen.enableFeatures(features);
-            parser.generate(gen);
+            if (file != null)
+            {
+                parser = new DMGParser(new FileInputStream(file));
+                Generator gen = new JavaGenerator();
+                gen.enableFeatures(features);
+                parser.generate(gen);
+            }
+            if (json != null)
+            {
+                parser = new DMGParser(json, DataType.JSON);
+                Generator gen = new JavaGenerator();
+                gen.enableFeatures(features);
+                parser.generate(gen);
+            }
         } catch (IOException e) {
             e.printStackTrace();
             Log.e(new DMG_Main(),"failed to open '"+file+"'");

@@ -72,11 +72,11 @@ class DMG_JsonParser
         }
         if (o instanceof  Integer)
         {
-            return new Field(name, Type.Int,false);
+            return new Field(name, numericType(Type.Int),false);
         }
         if (o instanceof  Double)
         {
-            return new Field(name, Type.Real,false);
+            return new Field(name, numericType(Type.Real),false);
         }
         if (o instanceof Boolean)
         {
@@ -86,7 +86,32 @@ class DMG_JsonParser
         return new Field(name, Type.ERROR_TYPE, false);
     }
 
-
+    Type numericType(Type t)
+    {
+        if (Utils.forceNumber)
+        {
+            switch (t) {
+                case Int:
+                case Real:
+                case Number:
+                    return Type.Number;
+                default:
+                    Log.e(this,"unexpected type '"+t+"'");
+            }
+        }
+        else
+        {
+            switch (t) {
+                case Int:
+                case Real:
+                case Number:
+                    return t;
+                default:
+                    Log.e(this,"unexpected type '"+t+"'");
+            }
+        }
+        return t;
+    }
 
     void parseObjectArray(JSONArray json, String name)
     {
