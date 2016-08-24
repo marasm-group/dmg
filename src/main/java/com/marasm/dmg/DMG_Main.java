@@ -9,11 +9,14 @@ import org.apache.commons.cli.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class DMG_Main
 {
     static String file = null;
+    static Collection<Feature> features = new ArrayList<>();
     public static void main(String[] args)
     {
         Options options=new Options();
@@ -40,6 +43,8 @@ public class DMG_Main
             if (newfile == null){newfile = cmd.getOptionValue("f");}
             file = newfile;
         }
+        features.add(Feature.from_json);
+        features.add(Feature.to_json);
         parse();
     }
     static class DummyGenerator implements Generator
@@ -52,6 +57,14 @@ public class DMG_Main
                 System.out.println(obj.name+":\n"+obj.toString(2));
             }
         }
+        @Override
+        public void enableFeatures(Collection<Feature> features) {}
+        @Override
+        public void disableFeatures(Collection<Feature> features){}
+        @Override
+        public void beginGeneration() {}
+        @Override
+        public void endGeneration(OutputStream stream) throws IOException {}
     }
     static void parse()
     {
@@ -62,7 +75,9 @@ public class DMG_Main
         DMGParser parser = null;
         try {
             parser = new DMGParser(new FileInputStream(file));
-            parser.generate(new JavaGenerator());
+            Generator gen = new JavaGenerator();
+            gen.enableFeatures(features);
+            parser.generate(gen);
         } catch (IOException e) {
             e.printStackTrace();
             Log.e(new DMG_Main(),"failed to open '"+file+"'");

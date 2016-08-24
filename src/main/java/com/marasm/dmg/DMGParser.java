@@ -48,6 +48,14 @@ public class DMGParser
     }
     public void generate(Generator gen)
     {
+        gen.beginGeneration();
         gen.generate(objects);
+        try {
+            gen.endGeneration(System.out);
+        } catch (IOException e)
+        {
+            Log.e(this,"Failed to write result");
+            e.printStackTrace();
+        }
     }
 }
