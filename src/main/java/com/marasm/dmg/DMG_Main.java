@@ -25,6 +25,7 @@ public class DMG_Main
         options.addOption("json",true,"single-line json string to process");
         options.addOption("forceNumber",false,"use 'Number' data type instead of 'Int' or 'Real'");
         options.addOption("out",true,"output file");
+        options.addOption("rootClass",true,"root class name");
         CommandLineParser parser = new DefaultParser();
         CommandLine cmd = null;
         try {
@@ -58,6 +59,10 @@ public class DMG_Main
         if(cmd.hasOption("json"))
         {
             json = cmd.getOptionValue("json");
+        }
+        if(cmd.hasOption("rootClass"))
+        {
+            Utils.rootClass = cmd.getOptionValue("rootClass");
         }
         if(cmd.hasOption("forceNumber"))
         {

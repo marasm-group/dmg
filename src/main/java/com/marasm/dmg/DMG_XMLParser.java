@@ -45,7 +45,12 @@ public class DMG_XMLParser
     private void ParseXML(Document doc)
     {
         DMGObject obj = new DMGObject();
-        obj.name = "DMG_XMLObject";
+        if(Utils.rootClass == null) {
+            obj.name = "DMG_XMLObject";
+        }
+        else {
+            obj.name = Utils.rootClass;
+        }
         visit(doc,0,obj);
         objects.add(obj);
     }

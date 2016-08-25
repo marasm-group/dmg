@@ -19,13 +19,23 @@ class DMG_JsonParser
     {
         if(data.startsWith("{")) {
             JSONObject json = new JSONObject(data);
-            objects.add(parseObject(json,"DMG_JsonObject"));
+            if(Utils.rootClass == null) {
+                objects.add(parseObject(json, "DMG_JsonObject"));
+            }
+            else {
+                objects.add(parseObject(json, Utils.rootClass));
+            }
         }else
         {
             if(data.startsWith("["))
             {
                 JSONArray json = new JSONArray(data);
-                parseObjectArray(json,"DMG_JsonObject");
+                if(Utils.rootClass == null) {
+                    parseObjectArray(json,"DMG_JsonObject");
+                }
+                else {
+                    parseObjectArray(json, Utils.rootClass);
+                }
             }
         }
 

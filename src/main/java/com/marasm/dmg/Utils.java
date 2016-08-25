@@ -14,6 +14,8 @@ public class Utils
     public static boolean forceNumber = false;
     public static String outFile = null;
 
+    public static String rootClass = null;
+
     public static String getVersion()
     {
         DMGObject object = new DMGObject();
