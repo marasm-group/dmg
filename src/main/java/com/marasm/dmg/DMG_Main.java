@@ -5,8 +5,6 @@ package com.marasm.dmg;
 
 import com.marasm.dmg.java.JavaGenerator;
 import org.apache.commons.cli.*;
-
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;

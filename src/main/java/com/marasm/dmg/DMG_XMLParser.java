@@ -5,7 +5,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-
 import javax.xml.parsers.*;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -71,7 +70,7 @@ public class DMG_XMLParser
         }
         if(fields.size() != 0 && currentObject != null)
         {
-            currentObject.fields = Utils.processDublicates(fields);
+            currentObject.fields = Utils.processDuplicates(fields);
         }
     }
 

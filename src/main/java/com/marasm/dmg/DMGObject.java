@@ -1,7 +1,6 @@
 package com.marasm.dmg;
 
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 
 /**

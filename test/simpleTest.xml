@@ -14,6 +14,7 @@
 		<salary>200000.0</salary>
 		<booleanValue>true</booleanValue>
 	</staff>
+	<dood id="1000" cool="true" name="Dude"/>
 	<name>hello</name>
 	<name>world</name>
 	<name>!!!</name>

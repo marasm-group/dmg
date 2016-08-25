@@ -94,7 +94,7 @@ public class Utils
         return value.length() > 0;
     }
 
-    public static ArrayList<Field> processDublicates(ArrayList<Field> fields)
+    public static ArrayList<Field> processDuplicates(ArrayList<Field> fields)
     {
         ArrayList<Field> result = new ArrayList<>();
         for (Field f : fields)
