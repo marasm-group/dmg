@@ -24,6 +24,7 @@ public class DMG_Main
         options.addOption("f","file",true,"file to process");
         options.addOption("json",true,"single-line json string to process");
         options.addOption("forceNumber",false,"use 'Number' data type instead of 'Int' or 'Real'");
+        options.addOption("out",true,"output file");
         CommandLineParser parser = new DefaultParser();
         CommandLine cmd = null;
         try {
@@ -49,6 +50,10 @@ public class DMG_Main
             String newfile = cmd.getOptionValue("file");
             if (newfile == null){newfile = cmd.getOptionValue("f");}
             file = newfile;
+        }
+        if(cmd.hasOption("out"))
+        {
+            Utils.outFile = cmd.getOptionValue("out");
         }
         if(cmd.hasOption("json"))
         {

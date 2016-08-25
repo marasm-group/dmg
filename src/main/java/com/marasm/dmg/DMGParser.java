@@ -1,8 +1,11 @@
 package com.marasm.dmg;
 
 import org.apache.commons.io.IOUtils;
+
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 
 /**
@@ -54,11 +57,18 @@ public class DMGParser
         gen.beginGeneration();
         gen.generate(objects);
         try {
-            gen.endGeneration(System.out);
+            OutputStream stream = System.out;
+            if (Utils.outFile != null)
+            {
+                stream = new FileOutputStream(Utils.outFile);
+                System.out.println("Writing output to "+Utils.outFile);
+            }
+            gen.endGeneration(stream);
         } catch (IOException e)
         {
             Log.e(this,"Failed to write result");
             e.printStackTrace();
+            System.exit(-1);
         }
     }
 }
