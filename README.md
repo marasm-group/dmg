@@ -6,6 +6,8 @@ or
 
 dmg -file path/to/your/example/data/file
 
+for more info run dmg -h
+
 ## Installation
 Requirements: 
 * [maven](https://maven.apache.org)
