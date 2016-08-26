@@ -13,9 +13,6 @@ import java.util.Collection;
 
 public class DMG_Main
 {
-    static String file = null;
-    static String json = null;
-    static Collection<Feature> features = new ArrayList<>();
     public static void main(String[] args)
     {
         Options options=new Options();
@@ -25,6 +22,7 @@ public class DMG_Main
         options.addOption("json",true,"single-line json string to process");
         options.addOption("forceNumber",false,"use 'Number' data type instead of 'Int' or 'Real'");
         options.addOption("out",true,"output file");
+        options.addOption("opt",true,"options (json array of strings)\n"+Configuration.featuresDescription());
         options.addOption("rootClass",true,"root class name");
         CommandLineParser parser = new DefaultParser();
         CommandLine cmd = null;
@@ -46,11 +44,17 @@ public class DMG_Main
             System.out.println("dmg version: "+Utils.getVersion());
             System.exit(0);
         }
+        if(cmd.hasOption("opt"))
+        {
+            String s = cmd.getOptionValue("opt");
+            Configuration.setFeatures(s);
+            if(s == null){System.exit(0);}
+        }
         if(cmd.hasOption("file") || cmd.hasOption("f"))
         {
             String newfile = cmd.getOptionValue("file");
             if (newfile == null){newfile = cmd.getOptionValue("f");}
-            file = newfile;
+            Configuration.file = newfile;
         }
         if(cmd.hasOption("out"))
         {
@@ -58,7 +62,7 @@ public class DMG_Main
         }
         if(cmd.hasOption("json"))
         {
-            json = cmd.getOptionValue("json");
+            Configuration.json = cmd.getOptionValue("json");
         }
         if(cmd.hasOption("rootClass"))
         {
@@ -68,32 +72,11 @@ public class DMG_Main
         {
             Utils.forceNumber = true;
         }
-        features.add(Feature.from_json);
-        features.add(Feature.to_json);
         parse();
-    }
-    static class DummyGenerator implements Generator
-    {
-        public void generate(ArrayList<DMGObject> objectList)
-        {
-            System.out.println("Parsed data:");
-            for (DMGObject obj : objectList)
-            {
-                System.out.println(obj.name+":\n"+obj.toString(2));
-            }
-        }
-        @Override
-        public void enableFeatures(Collection<Feature> features) {}
-        @Override
-        public void disableFeatures(Collection<Feature> features){}
-        @Override
-        public void beginGeneration() {}
-        @Override
-        public void endGeneration(OutputStream stream) throws IOException {}
     }
     static void parse()
     {
-        if (file == null && json == null)
+        if (Configuration.file == null && Configuration.json == null)
         {
             Log.e(new DMG_Main(),"No file or data specified");
             System.exit(-1);
@@ -101,23 +84,23 @@ public class DMG_Main
 
         DMGParser parser = null;
         try {
-            if (file != null)
+            if (Configuration.file != null)
             {
-                parser = new DMGParser(new FileInputStream(file));
+                parser = new DMGParser(new FileInputStream(Configuration.file));
                 Generator gen = new JavaGenerator();
-                gen.enableFeatures(features);
+                gen.enableFeatures(Configuration.features);
                 parser.generate(gen);
             }
-            if (json != null)
+            if (Configuration.json != null)
             {
-                parser = new DMGParser(json, DataType.JSON);
+                parser = new DMGParser(Configuration.json, DataType.JSON);
                 Generator gen = new JavaGenerator();
-                gen.enableFeatures(features);
+                gen.enableFeatures(Configuration.features);
                 parser.generate(gen);
             }
         } catch (IOException e) {
             e.printStackTrace();
-            Log.e(new DMG_Main(),"failed to open '"+file+"'");
+            Log.e(new DMG_Main(),"failed to open '"+Configuration.file+"'");
         }
 
     }
