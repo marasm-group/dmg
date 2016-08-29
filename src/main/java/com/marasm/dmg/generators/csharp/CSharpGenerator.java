@@ -163,7 +163,7 @@ public class CSharpGenerator implements Generator
                     this.to_json = true;
                     break;*/
                 default:
-                    Log.e(this,"Feature "+f+"is unsupported!");
+                    Log.e(this,"Feature "+f+" is unsupported!");
                     System.exit(-1);
             }
         }
@@ -183,7 +183,7 @@ public class CSharpGenerator implements Generator
                     this.to_json = false;
                     break;*/
                 default:
-                    Log.e(this,"Feature "+f+"is unsupported!");
+                    Log.e(this,"Feature "+f+" is unsupported!");
                     break;
             }
         }

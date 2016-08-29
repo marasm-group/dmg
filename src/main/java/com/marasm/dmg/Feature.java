@@ -7,6 +7,7 @@ public enum Feature
 {
     from_json, // json string -> object conversion
     to_json,   // object -> json string conversion
+    couchdb,   // Couchbase lite
 
     ERROR_FEATURE;
 
@@ -18,6 +19,8 @@ public enum Feature
                 return from_json;
             case "to_json":
                 return to_json;
+            case "couchdb":
+                return couchdb;
             default:
                 return ERROR_FEATURE;
         }
@@ -31,6 +34,8 @@ public enum Feature
                 return "\"from_json\" -- add json deserialization";
             case to_json:
                 return "\"to_json\" -- add json serialization";
+            case couchdb:
+                return "\"couchdb\" -- couchbase lite support";
             default:
                     return "";
         }

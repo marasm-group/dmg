@@ -28,6 +28,7 @@ public class JavaGenerator implements Generator
 
     boolean to_json = false;
     boolean from_json = false;
+    private boolean couchdb = false;
 
     void append(String str)
     {
@@ -89,6 +90,11 @@ public class JavaGenerator implements Generator
             }
             append("return "+tmp_json_obj+";");
             append("\n}//jsonValue");
+        }
+        if(couchdb)
+        {
+            CouchDBGenerator g = new CouchDBGenerator(this);
+            g.generateObject(object);
         }
         append("\n}//"+object.name);
         for (Field f: object.fields)
@@ -272,8 +278,13 @@ public class JavaGenerator implements Generator
                 case to_json:
                     this.to_json = true;
                     break;
+                case couchdb:
+                    this.couchdb = true;
+                    this.from_json = true;
+                    this.to_json = true;
+                    break;
                 default:
-                    Log.e(this,"Feature "+f+"is unsupported!");
+                    Log.e(this,"Feature "+f+" is unsupported!");
                     System.exit(-1);
             }
         }
@@ -290,8 +301,11 @@ public class JavaGenerator implements Generator
                 case to_json:
                     this.to_json = false;
                     break;
+                case couchdb:
+                    this.couchdb = false;
+                    break;
                 default:
-                    Log.e(this,"Feature "+f+"is unsupported!");
+                    Log.e(this,"Feature "+f+" is unsupported!");
                     break;
             }
         }
