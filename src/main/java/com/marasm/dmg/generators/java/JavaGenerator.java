@@ -28,6 +28,7 @@ public class JavaGenerator implements Generator
 
     boolean to_json = false;
     boolean from_json = false;
+    boolean sql = false;
 
     void append(String str)
     {
@@ -40,21 +41,21 @@ public class JavaGenerator implements Generator
         {
             if (f.isArray)
             {
-                append(arrayType+"<"+type(f,true)+"> "+f.name+";");
+                append("public "+arrayType+"<"+type(f,true)+"> "+f.name+";");
             }
             else
             {
-                append(type(f)+" "+f.name+";");
+                append("public "+type(f)+" "+f.name+";");
             }
         }
         if(from_json)
         {
-            append("void fillWithJSON(String jsonStr)\n" +
+            append("public void fillWithJSON(String jsonStr)\n" +
                     "{\n" +
                     "JSONObject json = new JSONObject(jsonStr);\n" +
                     "fillWithJSON(json);\n" +
                     "}\n" +
-                    "void fillWithJSON(JSONObject json)\n{");
+                    "public void fillWithJSON(JSONObject json)\n{");
             for (Field f: object.fields)
             {
                 if (f.isArray)
@@ -70,11 +71,11 @@ public class JavaGenerator implements Generator
         }
         if(to_json)
         {
-            append("String jsonString()\n" +
+            append("public String jsonString()\n" +
                     "{\n" +
                     "return this.jsonValue().toString();\n" +
                     "}\n" +
-                    "JSONObject jsonValue()\n{\n" +
+                    "public JSONObject jsonValue()\n{\n" +
                     "JSONObject "+tmp_json_obj+" = new JSONObject();");
             for (Field f: object.fields)
             {
@@ -89,6 +90,10 @@ public class JavaGenerator implements Generator
             }
             append("return "+tmp_json_obj+";");
             append("\n}//jsonValue");
+        }
+        if(sql)
+        {
+            new SQLGen(this).generate(object);
         }
         append("\n}//"+object.name);
         for (Field f: object.fields)
@@ -272,6 +277,9 @@ public class JavaGenerator implements Generator
                 case to_json:
                     this.to_json = true;
                     break;
+                case sql:
+                    this.sql = true;
+                    break;
                 default:
                     Log.e(this,"Feature "+f+"is unsupported!");
                     System.exit(-1);
@@ -290,6 +298,9 @@ public class JavaGenerator implements Generator
                 case to_json:
                     this.to_json = false;
                     break;
+                case sql:
+                    this.sql = false;
+                    break;
                 default:
                     Log.e(this,"Feature "+f+"is unsupported!");
                     break;
@@ -304,6 +315,10 @@ public class JavaGenerator implements Generator
         {
             file_header+="// JSON serialization/deserializatin library: \n";
             file_header+="import org.json.*;// Maven: org.json:json:20160810\n";
+        }
+        if(sql)
+        {
+            file_header+=SQLGen.header;
         }
         append(file_header);
     }
