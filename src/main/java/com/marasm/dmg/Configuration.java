@@ -1,5 +1,7 @@
 package com.marasm.dmg;
 
+import com.marasm.dmg.generators.csharp.CSharpGenerator;
+import com.marasm.dmg.generators.java.JavaGenerator;
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -57,6 +59,52 @@ public class Configuration
             e.printStackTrace();
             Log.e(new Configuration(),"illegal option string '"+jsonStr+"'");
             System.exit(-1);
+        }
+    }
+    static String[] langs = {"java","c#"};
+    private static String lang = "java";
+    public static String language(){return lang;}
+    public static void setLanguage(String _lang)
+    {
+        boolean unknown = true;
+        for (String l : langs)
+        {
+            if(l.equals(_lang))
+            {
+                unknown = false;
+                lang = _lang;
+            }
+        }
+        if (unknown)
+        {
+            Log.e(new Configuration(),"Unknown language '"+_lang+"'");
+            System.exit(-1);
+        }
+    }
+    public static String languagesDescription()
+    {
+        String res = "";
+        for (String l : langs)
+        {
+            res += l+", ";
+        }
+        if (res.endsWith(", "))
+        {
+            res = res.substring(0,res.length()-2);
+        }
+        return res;
+    }
+    public static Generator generator()
+    {
+        switch (lang)
+        {
+            case "java":
+                return new JavaGenerator();
+            case "c#":
+                return new CSharpGenerator();
+            default:
+                Log.e(new Configuration(),"Unknown language '"+lang+"'");
+                return null;
         }
     }
 }

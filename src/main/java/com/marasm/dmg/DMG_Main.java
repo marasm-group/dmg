@@ -3,13 +3,10 @@
  */
 package com.marasm.dmg;
 
-import com.marasm.dmg.java.JavaGenerator;
+import com.marasm.dmg.generators.java.JavaGenerator;
 import org.apache.commons.cli.*;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Collection;
 
 public class DMG_Main
 {
@@ -24,6 +21,7 @@ public class DMG_Main
         options.addOption("out",true,"output file");
         options.addOption("opt",true,"options (json array of strings)\n"+Configuration.featuresDescription());
         options.addOption("rootClass",true,"root class name");
+        options.addOption("l","lang",true,"output language (one of following:)\n"+Configuration.languagesDescription()+"\ndefault: java");
         CommandLineParser parser = new DefaultParser();
         CommandLine cmd = null;
         try {
@@ -72,6 +70,15 @@ public class DMG_Main
         {
             Utils.forceNumber = true;
         }
+        if(cmd.hasOption("lang") || cmd.hasOption("l"))
+        {
+            String l = cmd.getOptionValue("lang");
+            if(l == null)
+            {
+                l = cmd.getOptionValue("l");
+            }
+            Configuration.setLanguage(l);
+        }
         parse();
     }
     static void parse()
@@ -87,14 +94,14 @@ public class DMG_Main
             if (Configuration.file != null)
             {
                 parser = new DMGParser(new FileInputStream(Configuration.file));
-                Generator gen = new JavaGenerator();
+                Generator gen = Configuration.generator();
                 gen.enableFeatures(Configuration.features);
                 parser.generate(gen);
             }
             if (Configuration.json != null)
             {
                 parser = new DMGParser(Configuration.json, DataType.JSON);
-                Generator gen = new JavaGenerator();
+                Generator gen = Configuration.generator();
                 gen.enableFeatures(Configuration.features);
                 parser.generate(gen);
             }

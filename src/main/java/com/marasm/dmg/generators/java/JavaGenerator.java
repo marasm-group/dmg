@@ -1,4 +1,4 @@
-package com.marasm.dmg.java;
+package com.marasm.dmg.generators.java;
 
 import com.marasm.dmg.*;
 import java.io.IOException;
