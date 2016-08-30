@@ -3,8 +3,6 @@ package com.marasm.dmg.generators.java;
 import com.marasm.dmg.DMGObject;
 import com.marasm.dmg.Field;
 
-import java.util.HashMap;
-
 /**
  * Created by vhq473 on 29.08.2016.
  */
@@ -27,7 +25,7 @@ public class CouchDBGenerator
     void generateObject(DMGObject o)
     {
         g.append("public String saveToDB(){");
-        g.append("return this.saveToDB(\""+dmName(o.name)+"\");");
+        g.append("return this.saveToDB(\""+ dbName(o.name)+"\");");
         g.append("}");
         g.append("public String saveToDB(String db){");
         g.append("JavaContext context = new JavaContext();\n"+
@@ -137,8 +135,26 @@ public class CouchDBGenerator
             }
         }
         g.append("}");
+        g.append("Database defaultDB()\n{");
+        g.append("JavaContext context = new JavaContext();\n"+
+                 "Manager manager = null;\n"+
+                 "try {\n"+
+                 "manager = new Manager(context, Manager.DEFAULT_OPTIONS);\n"+
+                 "} catch (IOException e) {\n"+
+                 "e.printStackTrace();\n"+
+                 "return null;\n"+
+                 "}\n"+
+                 "Database database = null;\n"+
+                 "try {\n"+
+                 "database = manager.getDatabase(\""+ dbName(o.name)+"\");\n"+
+                 "} catch (Exception e) {\n"+
+                 "e.printStackTrace();\n"+
+                 "return null;\n"+
+                 "}");
+        g.append("return database;");
+        g.append("}");
         g.append("void fillFromCouchDB(String id){");
-        g.append("this.fillFromCouchDB(\"" + dmName(o.name) + "\",id);");
+        g.append("this.fillFromCouchDB(\"" + dbName(o.name) + "\",id);");
         g.append("}");
         g.append("void fillFromCouchDB(String db, String id){");
         g.append("JavaContext context = new JavaContext();\n"+
@@ -167,7 +183,7 @@ public class CouchDBGenerator
         g.append("}");
     }
 
-    String dmName(String s)
+    String dbName(String s)
     {
         return s.toLowerCase();
     }
