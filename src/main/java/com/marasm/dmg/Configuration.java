@@ -2,6 +2,7 @@ package com.marasm.dmg;
 
 import com.marasm.dmg.generators.csharp.CSharpGenerator;
 import com.marasm.dmg.generators.java.JavaGenerator;
+import com.marasm.dmg.generators.swift.SwiftGenerator;
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -61,7 +62,7 @@ public class Configuration
             System.exit(-1);
         }
     }
-    static String[] langs = {"java","c#"};
+    static String[] langs = {"java","swift","c#"};
     private static String lang = "java";
     public static String language(){return lang;}
     public static void setLanguage(String _lang)
@@ -102,6 +103,8 @@ public class Configuration
                 return new JavaGenerator();
             case "c#":
                 return new CSharpGenerator();
+            case "swift":
+                return new SwiftGenerator();
             default:
                 Log.e(new Configuration(),"Unknown language '"+lang+"'");
                 return null;
