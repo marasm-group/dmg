@@ -39,12 +39,18 @@ public class SwiftGenerator implements Generator
     }
     public void generate(DMGObject object)
     {
-        append("class "+capitalizeFirst(object.name)+"\n{");
+        String classStr = "public class "+capitalizeFirst(object.name);
+        if(to_json)
+        {
+            classStr += " : CustomStringConvertible, CustomDebugStringConvertible";
+        }
+        append(classStr);
+        append("{");
         for (Field f: object.fields)
         {
-            append("var "+f.name+": "+type(f,f.isArray)+"?");
+            append("public var "+f.name+": "+type(f,f.isArray)+"?");
         }
-        append("init(){}");
+        append("public init(){}");
         if(from_json)
         {
             append("//MARK: JSON deserialization");
@@ -57,11 +63,11 @@ public class SwiftGenerator implements Generator
                           "print(error)\n"+
                           "return nil\n"+
                           "}\n}";
-            append("convenience init?(jsonString: String)");
+            append("public convenience init?(jsonString: String)");
             append(tmp1);
             append("self.init(jsonDictionary: json)\n}");
             append(tmp2);
-            append("convenience init(jsonDictionary json: [String: AnyObject])\n{");
+            append("public convenience init(jsonDictionary json: [String: AnyObject])\n{");
             append("self.init()");
             for (Field f : object.fields)
             {
@@ -95,7 +101,7 @@ public class SwiftGenerator implements Generator
         if(to_json)
         {
             append("//MARK: JSON serialization");
-            append("var jsonDictionary : [String:AnyObject]\n"+
+            append("public var jsonDictionary : [String:AnyObject]\n"+
                    "{\n");
             append("var "+tmp_json_obj+" = [String:AnyObject]()");
             for (Field f : object.fields)
@@ -126,7 +132,7 @@ public class SwiftGenerator implements Generator
             }
             append("return "+tmp_json_obj);
             append("}");
-            append("var jsonPrettyString : String?\n"+
+            append("public var jsonPrettyString : String?\n"+
                     "{\n"+
                     "do{\n"+
                     "let data = try NSJSONSerialization.dataWithJSONObject(jsonDictionary, options: .PrettyPrinted)\n"+
@@ -134,7 +140,7 @@ public class SwiftGenerator implements Generator
                     "} catch let e {print(e)}\n"+
                     "return nil\n"+
                     "}\n"+
-                    "var jsonString : String?\n"+
+                    "public var jsonString : String?\n"+
                     "{\n"+
                     "do{\n"+
                     "let data = try NSJSONSerialization.dataWithJSONObject(jsonDictionary, options: NSJSONWritingOptions(rawValue: 0))\n"+
@@ -142,6 +148,9 @@ public class SwiftGenerator implements Generator
                     "} catch let e {print(e)}\n"+
                     "return nil\n"+
                     "}");
+            append("//MARK: CustomStringConvertible, CustomDebugStringConvertible");
+            append("public var debugDescription : String {return self.jsonPrettyString ?? \"<ERROR>\"}");
+            append("public var description : String {return self.jsonString ?? \"<ERROR>\"}");
         }
 
         append("\n}//"+object.name);
