@@ -62,7 +62,7 @@ public class Configuration
             System.exit(-1);
         }
     }
-    static String[] langs = {"java","swift","c#"};
+    static String[] langs = {"java","swift","c#", "dmg_structure"};
     private static String lang = "java";
     public static String language(){return lang;}
     public static void setLanguage(String _lang)
@@ -105,6 +105,8 @@ public class Configuration
                 return new CSharpGenerator();
             case "swift":
                 return new SwiftGenerator();
+            case "dmg_structure":
+                return new DMGStructureGenerator();
             default:
                 Log.e(new Configuration(),"Unknown language '"+lang+"'");
                 return null;

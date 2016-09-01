@@ -104,17 +104,26 @@ public class SwiftGenerator implements Generator
             append("public var jsonDictionary : [String:AnyObject]\n"+
                    "{\n");
             append("var "+tmp_json_obj+" = [String:AnyObject]()");
+            boolean arrayCreated = false;
             for (Field f : object.fields)
             {
                 if (f.object != null)
                 {
                     if(f.isArray)
                     {
-                        append("var "+tmp_arr+" = [AnyObject]()\n" +
-                                "        for "+tmp_obj+" in self."+f.name+" ?? [] {\n" +
-                                "            "+tmp_arr+".append("+tmp_obj+".jsonDictionary)\n" +
-                                "        }\n" +
-                                "        TMP_JSON_OBJ[\""+f.name+"\"] = "+tmp_arr);
+                        if(arrayCreated)
+                        {
+                            append("" + tmp_arr + " = [AnyObject]()");
+                        }
+                        else
+                        {
+                            append("var " + tmp_arr + " = [AnyObject]()");
+                            arrayCreated = true;
+                        }
+                        append("        for "+tmp_obj+" in self."+f.name+" ?? [] {\n" +
+                               "            "+tmp_arr+".append("+tmp_obj+".jsonDictionary)\n" +
+                               "        }\n" +
+                               "        TMP_JSON_OBJ[\""+f.name+"\"] = "+tmp_arr);
                     }
                     else
                     {
