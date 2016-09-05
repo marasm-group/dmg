@@ -1,7 +1,7 @@
 package com.marasm.dmg.generators.swift;
 
 import com.marasm.dmg.*;
-import com.marasm.dmg.generators.java.CouchDBGenerator;
+import com.marasm.dmg.generators.swift.CouchDBGenerator;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -39,10 +39,10 @@ public class SwiftGenerator implements Generator
     }
     public void generate(DMGObject object)
     {
-        String classStr = "public class "+capitalizeFirst(object.name);
+        String classStr = "public class "+capitalizeFirst(object.name) +": Equatable";
         if(to_json)
         {
-            classStr += " : CustomStringConvertible, CustomDebugStringConvertible";
+            classStr += ", CustomStringConvertible, CustomDebugStringConvertible";
         }
         append(classStr);
         append("{");
@@ -50,6 +50,7 @@ public class SwiftGenerator implements Generator
         {
             append("public var "+f.name+": "+type(f,f.isArray)+"?");
         }
+        append("static func Log(o:Any?){NSLog(\"\\("+capitalizeFirst(object.name)+".self): \\(o)\")}");
         append("public init(){}");
         if(from_json)
         {
@@ -60,7 +61,7 @@ public class SwiftGenerator implements Generator
                           "if let json = try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions()) as? [String: AnyObject]\n{";
             String tmp2 = "else {return nil}\n"+
                           "} catch {\n"+
-                          "print(error)\n"+
+                          ""+capitalizeFirst(object.name)+".Log(error)\n"+
                           "return nil\n"+
                           "}\n}";
             append("public convenience init?(jsonString: String)");
@@ -87,10 +88,15 @@ public class SwiftGenerator implements Generator
                            "self."+f.name+" = nil\n" +
                            "}");
                 }
-                else
-                {
-                    append("if let " + tmp_obj + " = json[\"" + f.name + "\"] as?" + type(f, f.isArray) + "{");
-                    append("self." + f.name + " = " + tmp_obj + "");
+                else {
+                    if (f.object != null)
+                    {
+                    append("if let " + tmp_obj + " = json[\"" + f.name + "\"] as?[String : AnyObject] {");
+                        append("self." + f.name + " = " + type(f, f.isArray) + "(jsonDictionary: " + tmp_obj + ")");
+                    }else{
+                        append("if let " + tmp_obj + " = json[\"" + f.name + "\"] as?" + type(f, f.isArray) + "{");
+                        append("self." + f.name + " = " + tmp_obj + "");
+                    }
                     append("} else {");
                     append("self." + f.name + " = nil");
                     append("}");
@@ -146,7 +152,7 @@ public class SwiftGenerator implements Generator
                     "do{\n"+
                     "let data = try NSJSONSerialization.dataWithJSONObject(jsonDictionary, options: .PrettyPrinted)\n"+
                     "return String(data: data,encoding: NSUTF8StringEncoding)\n"+
-                    "} catch let e {print(e)}\n"+
+                    "} catch let e {"+capitalizeFirst(object.name)+".Log(e)}\n"+
                     "return nil\n"+
                     "}\n"+
                     "public var jsonString : String?\n"+
@@ -154,15 +160,85 @@ public class SwiftGenerator implements Generator
                     "do{\n"+
                     "let data = try NSJSONSerialization.dataWithJSONObject(jsonDictionary, options: NSJSONWritingOptions(rawValue: 0))\n"+
                     "return String(data: data,encoding: NSUTF8StringEncoding)\n"+
-                    "} catch let e {print(e)}\n"+
+                    "} catch let e {"+capitalizeFirst(object.name)+".Log(e)}\n"+
                     "return nil\n"+
                     "}");
             append("//MARK: CustomStringConvertible, CustomDebugStringConvertible");
             append("public var debugDescription : String {return self.jsonPrettyString ?? \"<ERROR>\"}");
             append("public var description : String {return self.jsonString ?? \"<ERROR>\"}");
         }
-
+        if(couchdb)
+        {
+            append("//MARK: CouchDB");
+            new CouchDBGenerator(this).generateObject(object);
+        }
+        append("//MARK: Equality");
+        append("func isEqual(o : "+capitalizeFirst(object.name)+"?) -> Bool{");
+        append("guard let o = o else {return false}");
+        for (Field f:object.fields)
+        {
+            if(f.isArray)
+            {
+                String tmpa1 = tmp_arr+"_1";
+                String tmpa2 = tmp_arr+"_2";
+                String tmp1 = tmp_obj+"_1";
+                String tmp2 = tmp_obj+"_2";
+                append("if let "+tmpa1+" = self."+f.name+"{");
+                append("if let "+tmpa2+" = o."+f.name+"{");
+                append("if "+tmpa1+".count != "+tmpa2+".count {return false}");
+                append("for i in 0..<"+tmpa1+".count{");
+                append("let "+tmp1+" = "+tmpa1+"[i]");
+                append("let "+tmp2+" = "+tmpa2+"[i]");
+                if (f.object != null) {
+                    append("if !(" + tmp1 + ".isEqual(" + tmp2+ ") ?? false){return false}");
+                } else {
+                    append("if " + tmp1 + " != " + tmp2 + "{return false}");
+                }
+                append("}");// for
+                append("}");// tmpa2 ("o."+f.name != nil)
+                append("else{");
+                append("return false");
+                append("}");// ("o."+f.name == nil)
+                append("}");// tmpa1 ("self."+f.name != nil)
+                append("else{");
+                append("if o."+f.name+" != nil{");
+                append("return false\n}");
+                append("}");// ("self."+f.name == nil)
+            }
+            else {
+                if (f.object != null) {
+                    String tmp1 = tmp_obj+"_1";
+                    String tmp2 = tmp_obj+"_2";
+                    append("if let "+tmp1+" = self."+f.name+"{");
+                    append("if let "+tmp2+" = o."+f.name+"{");
+                    append("if !" + tmp1 + ".isEqual(" + tmp2 + "){return false}");
+                    append("}");//tmp2 ("o."+f.name)
+                    append("else{return false}");//"o."+f.name == nil
+                    append("}");//tmp1 ("self."+f.name)
+                    append("else{");
+                    append("if o."+f.name+" != nil {return false}");
+                    append("}");//"self."+f.name == nil
+                } else {
+                    append("if self." + f.name + " != o." + f.name + "{return false}");
+                }
+            }
+        }
+        append("return true");
+        append("}");
         append("\n}//"+object.name);
+        append("//MARK: Equatable");
+        append("public func ==(lhs: "+capitalizeFirst(object.name)+"?, rhs: "+capitalizeFirst(object.name)+"?) -> Bool {\n" +
+                "    return lhs?.isEqual(rhs) ?? false\n" +
+                "}\n" +
+                "public func ==(lhs: "+capitalizeFirst(object.name)+", rhs: "+capitalizeFirst(object.name)+") -> Bool {\n" +
+                "    return lhs.isEqual(rhs)\n" +
+                "}\n" +
+                "public func !=(lhs: "+capitalizeFirst(object.name)+"?, rhs: "+capitalizeFirst(object.name)+"?) -> Bool {\n" +
+                "    return !(lhs?.isEqual(rhs) ?? true)\n" +
+                "}\n" +
+                "public func !=(lhs: "+capitalizeFirst(object.name)+", rhs: "+capitalizeFirst(object.name)+") -> Bool {\n" +
+                "    return !lhs.isEqual(rhs)\n" +
+                "}");
         for (Field f: object.fields)
         {
             if (f.type ==  Type.Object)
@@ -234,9 +310,9 @@ public class SwiftGenerator implements Generator
                 case to_json:
                     this.to_json = true;
                     break;
-                /*case couchdb:
+                case couchdb:
                     this.couchdb = true;
-                    break;*/
+                    break;
                 default:
                     Log.e(this,"Feature "+f+" is unsupported!");
                     System.exit(-1);
@@ -255,9 +331,9 @@ public class SwiftGenerator implements Generator
                 case to_json:
                     this.to_json = false;
                     break;
-                /*case couchdb:
+                case couchdb:
                     this.couchdb = false;
-                    break;*/
+                    break;
                 default:
                     Log.e(this,"Feature "+f+" is unsupported!");
                     break;
@@ -267,6 +343,10 @@ public class SwiftGenerator implements Generator
 
     public void beginGeneration()
     {
+        if(couchdb)
+        {
+            file_header += new CouchDBGenerator(this).header;
+        }
         file_header+="// DMG version: "+Utils.getVersion()+"\n";
         append(file_header);
     }
