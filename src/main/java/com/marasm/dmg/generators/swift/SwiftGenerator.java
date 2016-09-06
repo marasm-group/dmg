@@ -228,13 +228,14 @@ public class SwiftGenerator implements Generator
         append("\n}//"+object.name);
         append("//MARK: Equatable");
         append("public func ==(lhs: "+capitalizeFirst(object.name)+"?, rhs: "+capitalizeFirst(object.name)+"?) -> Bool {\n" +
+                "if (lhs == nil) && (rhs == nil) {return true}\n"+
                 "    return lhs?.isEqual(rhs) ?? false\n" +
                 "}\n" +
                 "public func ==(lhs: "+capitalizeFirst(object.name)+", rhs: "+capitalizeFirst(object.name)+") -> Bool {\n" +
                 "    return lhs.isEqual(rhs)\n" +
                 "}\n" +
                 "public func !=(lhs: "+capitalizeFirst(object.name)+"?, rhs: "+capitalizeFirst(object.name)+"?) -> Bool {\n" +
-                "    return !(lhs?.isEqual(rhs) ?? true)\n" +
+                "    return !(lhs == rhs)\n" +
                 "}\n" +
                 "public func !=(lhs: "+capitalizeFirst(object.name)+", rhs: "+capitalizeFirst(object.name)+") -> Bool {\n" +
                 "    return !lhs.isEqual(rhs)\n" +
