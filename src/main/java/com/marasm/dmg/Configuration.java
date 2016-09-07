@@ -62,6 +62,15 @@ public class Configuration
             System.exit(-1);
         }
     }
+    public static String classname(String name)
+    {
+        return capitalizeFirst(name)+classSuffix;
+    }
+    public static String capitalizeFirst(String str)
+    {
+        return str.substring(0, 1).toUpperCase() + str.substring(1);
+    }
+    static String classSuffix = "";
     static String[] langs = {"java","swift","c#", "dmg_structure"};
     private static String lang = "java";
     public static String language(){return lang;}

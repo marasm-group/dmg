@@ -39,7 +39,7 @@ public class SwiftGenerator implements Generator
     }
     public void generate(DMGObject object)
     {
-        String classStr = "public class "+capitalizeFirst(object.name) +": Equatable";
+        String classStr = "public class "+Configuration.classname(object.name) +": Equatable";
         if(to_json)
         {
             classStr += ", CustomStringConvertible, CustomDebugStringConvertible";
@@ -50,7 +50,7 @@ public class SwiftGenerator implements Generator
         {
             append("public var "+f.name+": "+type(f,f.isArray)+"?");
         }
-        append("static func Log(o:Any?){NSLog(\"\\("+capitalizeFirst(object.name)+".self): \\(o)\")}");
+        append("static func Log(o:Any?){NSLog(\"\\("+Configuration.classname(object.name)+".self): \\(o)\")}");
         append("public init(){}");
         if(from_json)
         {
@@ -61,7 +61,7 @@ public class SwiftGenerator implements Generator
                           "if let json = try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions()) as? [String: AnyObject]\n{";
             String tmp2 = "else {return nil}\n"+
                           "} catch {\n"+
-                          ""+capitalizeFirst(object.name)+".Log(error)\n"+
+                          ""+Configuration.classname(object.name)+".Log(error)\n"+
                           "return nil\n"+
                           "}\n}";
             append("public convenience init?(jsonString: String)");
@@ -76,12 +76,12 @@ public class SwiftGenerator implements Generator
                 {
                     append("if let "+tmp_arr+" = json[\""+f.name+"\"] as? [AnyObject]\n" +
                            "{\n" +
-                           "self."+f.name+" = ["+capitalizeFirst(f.name)+"]()\n" +
+                           "self."+f.name+" = ["+Configuration.classname(f.name)+"]()\n" +
                            "for "+tmp_json_obj+" in "+tmp_arr+"\n" +
                            "{\n" +
                            "if let "+tmp_json_obj+" = "+tmp_json_obj+" as?[String : AnyObject]\n" +
                            "{\n" +
-                           "self."+f.name+"?.append("+capitalizeFirst(f.name)+"(jsonDictionary: "+tmp_json_obj+"))\n" +
+                           "self."+f.name+"?.append("+Configuration.classname(f.name)+"(jsonDictionary: "+tmp_json_obj+"))\n" +
                            "}\n" +
                            "}\n" +
                            "} else {\n" +
@@ -152,7 +152,7 @@ public class SwiftGenerator implements Generator
                     "do{\n"+
                     "let data = try NSJSONSerialization.dataWithJSONObject(jsonDictionary, options: .PrettyPrinted)\n"+
                     "return String(data: data,encoding: NSUTF8StringEncoding)\n"+
-                    "} catch let e {"+capitalizeFirst(object.name)+".Log(e)}\n"+
+                    "} catch let e {"+Configuration.classname(object.name)+".Log(e)}\n"+
                     "return nil\n"+
                     "}\n"+
                     "public var jsonString : String?\n"+
@@ -160,7 +160,7 @@ public class SwiftGenerator implements Generator
                     "do{\n"+
                     "let data = try NSJSONSerialization.dataWithJSONObject(jsonDictionary, options: NSJSONWritingOptions(rawValue: 0))\n"+
                     "return String(data: data,encoding: NSUTF8StringEncoding)\n"+
-                    "} catch let e {"+capitalizeFirst(object.name)+".Log(e)}\n"+
+                    "} catch let e {"+Configuration.classname(object.name)+".Log(e)}\n"+
                     "return nil\n"+
                     "}");
             append("//MARK: CustomStringConvertible, CustomDebugStringConvertible");
@@ -173,7 +173,7 @@ public class SwiftGenerator implements Generator
             new CouchDBGenerator(this).generateObject(object);
         }
         append("//MARK: Equality");
-        append("func isEqual(o : "+capitalizeFirst(object.name)+"?) -> Bool{");
+        append("func isEqual(o : "+Configuration.classname(object.name)+"?) -> Bool{");
         append("guard let o = o else {return false}");
         for (Field f:object.fields)
         {
@@ -227,10 +227,10 @@ public class SwiftGenerator implements Generator
         append("}");
         append("\n}//"+object.name);
         append("//MARK: Equatable");
-        append("public func ==(lhs: "+capitalizeFirst(object.name)+", rhs: "+capitalizeFirst(object.name)+") -> Bool {\n" +
+        append("public func ==(lhs: "+Configuration.classname(object.name)+", rhs: "+Configuration.classname(object.name)+") -> Bool {\n" +
                "    return lhs.isEqual(rhs)\n" +
                "}\n" +
-               "public func !=(lhs: "+capitalizeFirst(object.name)+", rhs: "+capitalizeFirst(object.name)+") -> Bool {\n" +
+               "public func !=(lhs: "+Configuration.classname(object.name)+", rhs: "+Configuration.classname(object.name)+") -> Bool {\n" +
                "    return !lhs.isEqual(rhs)\n" +
                "}");
         for (Field f: object.fields)
@@ -259,7 +259,7 @@ public class SwiftGenerator implements Generator
         switch (f.type)
         {
             case Object:
-                res = capitalizeFirst(f.object.name);
+                res = Configuration.classname(f.object.name);
                 break;
             case String:
                 res = "String";
@@ -285,11 +285,6 @@ public class SwiftGenerator implements Generator
             res = "["+ res + "]";
         }
         return res;
-    }
-
-    public String capitalizeFirst(String str)
-    {
-        return str.substring(0, 1).toUpperCase() + str.substring(1);
     }
 
     public void enableFeatures(Collection<Feature> features)

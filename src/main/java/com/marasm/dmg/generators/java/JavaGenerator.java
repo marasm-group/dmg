@@ -37,7 +37,7 @@ public class JavaGenerator implements Generator
     }
     public void generate(DMGObject object)
     {
-        append("class "+capitalizeFirst(object.name)+"\n{");
+        append("class "+Configuration.classname(object.name)+"\n{");
         for (Field f: object.fields)
         {
             if (f.isArray)
@@ -238,7 +238,7 @@ public class JavaGenerator implements Generator
         switch (f.type)
         {
             case Object:
-                return capitalizeFirst(f.object.name);
+                return Configuration.classname(f.object.name);
             case String:
                 return "String";
             case Int:
@@ -260,11 +260,6 @@ public class JavaGenerator implements Generator
             default:
                 return "ERROR_TYPE";
         }
-    }
-
-    public String capitalizeFirst(String str)
-    {
-        return str.substring(0, 1).toUpperCase() + str.substring(1);
     }
 
     public void enableFeatures(Collection<Feature> features)

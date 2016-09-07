@@ -1,5 +1,6 @@
 package com.marasm.dmg.generators.swift;
 
+import com.marasm.dmg.Configuration;
 import com.marasm.dmg.DMGObject;
 import com.marasm.dmg.Field;
 
@@ -45,14 +46,14 @@ public class CouchDBGenerator
         g.append("let database = try CBLManager.sharedInstance().databaseNamed(dbName) \n"+
                  "guard let document = database.documentWithID(documentID) \n" +
                  "else{\n"+
-                 ""+g.capitalizeFirst(o.name)+".Log(\"ERROR: documentWithID(\\(documentID)) is nil\")\n"+
+                 ""+ Configuration.classname(o.name)+".Log(\"ERROR: documentWithID(\\(documentID)) is nil\")\n"+
                  "return nil\n}\n"+
                  "self.init(cblDocument: document)\n");
         g.append("}");
         g.append("public convenience init?(cblDocument: CBLDocument){\n"+
                  "guard let props = cblDocument.properties\n" +
                  "else {\n" +
-                 ""+g.capitalizeFirst(o.name)+".Log(\"ERROR: cblDocument.properties is nil\")\n"+
+                 ""+Configuration.classname(o.name)+".Log(\"ERROR: cblDocument.properties is nil\")\n"+
                  "return nil\n" +
                  "}\n" +
                  "self.init(jsonDictionary: props)\n");
