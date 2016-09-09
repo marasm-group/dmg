@@ -94,7 +94,7 @@ public class JavaGenerator implements Generator
         }
         if(couchdb)
         {
-            CouchDBGenerator g = new CouchDBGenerator(this);
+            CouchBaseGenerator g = new CouchBaseGenerator(this);
             g.generateObject(object);
         }
         append("\n}//"+object.name);
@@ -274,7 +274,7 @@ public class JavaGenerator implements Generator
                 case to_json:
                     this.to_json = true;
                     break;
-                case couchdb:
+                case couchbase:
                     this.couchdb = true;
                     break;
                 default:
@@ -295,7 +295,7 @@ public class JavaGenerator implements Generator
                 case to_json:
                     this.to_json = false;
                     break;
-                case couchdb:
+                case couchbase:
                     this.couchdb = false;
                     break;
                 default:
@@ -315,7 +315,7 @@ public class JavaGenerator implements Generator
         }
         if(couchdb)
         {
-            file_header+=new CouchDBGenerator(this).header;
+            file_header+=new CouchBaseGenerator(this).header;
         }
         append(file_header);
     }

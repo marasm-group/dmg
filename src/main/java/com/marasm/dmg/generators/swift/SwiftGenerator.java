@@ -1,7 +1,6 @@
 package com.marasm.dmg.generators.swift;
 
 import com.marasm.dmg.*;
-import com.marasm.dmg.generators.swift.CouchDBGenerator;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -170,7 +169,7 @@ public class SwiftGenerator implements Generator
         if(couchdb)
         {
             append("//MARK: CouchDB");
-            new CouchDBGenerator(this).generateObject(object);
+            new CouchBaseGenerator(this).generateObject(object);
         }
         append("//MARK: Equality");
         append("func isEqual(o : "+Configuration.classname(object.name)+"?) -> Bool{");
@@ -299,7 +298,7 @@ public class SwiftGenerator implements Generator
                 case to_json:
                     this.to_json = true;
                     break;
-                case couchdb:
+                case couchbase:
                     this.couchdb = true;
                     break;
                 default:
@@ -320,7 +319,7 @@ public class SwiftGenerator implements Generator
                 case to_json:
                     this.to_json = false;
                     break;
-                case couchdb:
+                case couchbase:
                     this.couchdb = false;
                     break;
                 default:
@@ -334,7 +333,7 @@ public class SwiftGenerator implements Generator
     {
         if(couchdb)
         {
-            file_header += new CouchDBGenerator(this).header;
+            file_header += new CouchBaseGenerator(this).header;
         }
         file_header+="// DMG version: "+Utils.getVersion()+"\n";
         append(file_header);

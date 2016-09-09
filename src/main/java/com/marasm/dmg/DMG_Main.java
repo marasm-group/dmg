@@ -20,6 +20,10 @@ public class DMG_Main
         options.addOption("forceNumber",false,"use 'Number' data type instead of 'Int' or 'Real'");
         options.addOption("out",true,"output file");
         options.addOption("opt",true,"options (json array of strings)\n"+Configuration.featuresDescription());
+        options.addOption("to_json",false,"add 'to_json' option");
+        options.addOption("from_json",false,"add 'from_json' option");
+        options.addOption("couchbase",false,"add 'couchbase' option");
+        options.addOption("classSuffix",true,"suffix to append to all class types");
         options.addOption("rootClass",true,"root class name");
         options.addOption("classSuffix",true,"suffix to append to all class types");
         options.addOption("l","lang",true,"output language (one of following:)\n"+Configuration.languagesDescription()+"\ndefault: java");
@@ -83,6 +87,18 @@ public class DMG_Main
                 l = cmd.getOptionValue("l");
             }
             Configuration.setLanguage(l);
+        }
+        if (cmd.hasOption("couchbase"))
+        {
+            Configuration.setFeatures("[couchbase]");
+        }
+        if (cmd.hasOption("to_json"))
+        {
+            Configuration.setFeatures("[to_json]");
+        }
+        if (cmd.hasOption("from_json"))
+        {
+            Configuration.setFeatures("[from_json]");
         }
         if (Configuration.classSuffix  == null)
         {
