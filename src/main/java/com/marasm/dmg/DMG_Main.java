@@ -21,6 +21,7 @@ public class DMG_Main
         options.addOption("out",true,"output file");
         options.addOption("opt",true,"options (json array of strings)\n"+Configuration.featuresDescription());
         options.addOption("rootClass",true,"root class name");
+        options.addOption("classSuffix",true,"suffix to append to all class types");
         options.addOption("l","lang",true,"output language (one of following:)\n"+Configuration.languagesDescription()+"\ndefault: java");
         CommandLineParser parser = new DefaultParser();
         CommandLine cmd = null;
@@ -70,6 +71,10 @@ public class DMG_Main
         {
             Utils.forceNumber = true;
         }
+        if(cmd.hasOption("classSuffix"))
+        {
+            Configuration.classSuffix = cmd.getOptionValue("classSuffix");
+        }
         if(cmd.hasOption("lang") || cmd.hasOption("l"))
         {
             String l = cmd.getOptionValue("lang");
@@ -78,6 +83,10 @@ public class DMG_Main
                 l = cmd.getOptionValue("l");
             }
             Configuration.setLanguage(l);
+        }
+        if (Configuration.classSuffix  == null)
+        {
+            Configuration.classSuffix = "";
         }
         parse();
     }

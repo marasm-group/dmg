@@ -32,7 +32,7 @@ public class CSharpGenerator implements Generator
 
     void generateObject(DMGObject o)
     {
-        append("class "+capitalizeFirst(o.name)+"\n{");
+        append("class "+Configuration.classname(o.name)+"\n{");
         for (Field f : o.fields)
         {
             generateField(f);
@@ -62,12 +62,12 @@ public class CSharpGenerator implements Generator
     {
         if(from_json)
         {
-            append("public static "+capitalizeFirst(o.name)+" fromJSON(String jsonStr)\n{");
+            append("public static "+Configuration.classname(o.name)+" fromJSON(String jsonStr)\n{");
             append("JsonObject obj = JsonValue.Parse(jsonStr).GetObject();");
             append("return fromJSON(json);");
             append("}");
-            append("public static "+capitalizeFirst(o.name)+" fromJSON(JsonObject json)\n{");
-            append(capitalizeFirst(o.name)+" "+tmp_object+" = new "+capitalizeFirst(o.name)+"();");
+            append("public static "+Configuration.classname(o.name)+" fromJSON(JsonObject json)\n{");
+            append(Configuration.classname(o.name)+" "+tmp_object+" = new "+Configuration.classname(o.name)+"();");
             for (Field f:o.fields)
             {
                 if(f.isArray)
@@ -78,7 +78,7 @@ public class CSharpGenerator implements Generator
                     switch (f.type)
                     {
                         case Object:
-                            append(tmp_object+"."+f.name+"[i] = "+capitalizeFirst(f.name)+".fromJSON("+tmp_json_array+".GetStringAt(i));");
+                            append(tmp_object+"."+f.name+"[i] = "+Configuration.classname(f.name)+".fromJSON("+tmp_json_array+".GetStringAt(i));");
                             break;
                         case String:
                             append(tmp_object+"."+f.name+"[i] = "+tmp_json_array+".GetStringAt(i);");
@@ -109,7 +109,7 @@ public class CSharpGenerator implements Generator
                     switch (f.type)
                     {
                         case Object:
-                            append(tmp_object+"."+f.name+" = "+capitalizeFirst(f.name)+".fromJSON(json.GetNamedObject(\""+f.name+"\"));");
+                            append(tmp_object+"."+f.name+" = "+Configuration.classname(f.name)+".fromJSON(json.GetNamedObject(\""+f.name+"\"));");
                             break;
                         case String:
                             append(tmp_object+"."+f.name+" = json.GetNamedString(\""+f.name+"\");");
@@ -163,7 +163,7 @@ public class CSharpGenerator implements Generator
                     this.to_json = true;
                     break;*/
                 default:
-                    Log.e(this,"Feature "+f+"is unsupported!");
+                    Log.e(this,"Feature "+f+" is unsupported!");
                     System.exit(-1);
             }
         }
@@ -183,7 +183,7 @@ public class CSharpGenerator implements Generator
                     this.to_json = false;
                     break;*/
                 default:
-                    Log.e(this,"Feature "+f+"is unsupported!");
+                    Log.e(this,"Feature "+f+" is unsupported!");
                     break;
             }
         }
@@ -214,7 +214,7 @@ public class CSharpGenerator implements Generator
         switch (f.type)
         {
             case Object:
-                return capitalizeFirst(f.object.name);
+                return Configuration.classname(f.object.name);
             case String:
                 return "String";
             case Int:
@@ -230,10 +230,5 @@ public class CSharpGenerator implements Generator
             default:
                 return "ERROR_TYPE";
         }
-    }
-
-    public String capitalizeFirst(String str)
-    {
-        return str.substring(0, 1).toUpperCase() + str.substring(1);
     }
 }
