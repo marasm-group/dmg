@@ -3,6 +3,7 @@
  */
 package com.marasm.dmg;
 
+import com.marasm.dmg.generators.SQL;
 import com.marasm.dmg.generators.java.JavaGenerator;
 import org.apache.commons.cli.*;
 import java.io.FileInputStream;
@@ -119,14 +120,14 @@ public class DMG_Main
             if (Configuration.file != null)
             {
                 parser = new DMGParser(new FileInputStream(Configuration.file));
-                Generator gen = Configuration.generator();
+                Generator gen = new SQL();//Configuration.generator();
                 gen.enableFeatures(Configuration.features);
                 parser.generate(gen);
             }
             if (Configuration.json != null)
             {
                 parser = new DMGParser(Configuration.json, DataType.JSON);
-                Generator gen = Configuration.generator();
+                Generator gen = new SQL();//Configuration.generator();
                 gen.enableFeatures(Configuration.features);
                 parser.generate(gen);
             }
