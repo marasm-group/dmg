@@ -7,7 +7,7 @@ import com.marasm.dmg.Field;
 /**
  * Created by vhq473 on 29.08.2016.
  */
-public class CouchDBGenerator
+public class CouchBaseGenerator
 {
     SwiftGenerator g;
     public String header = "import CouchbaseLite\n";
@@ -16,7 +16,7 @@ public class CouchDBGenerator
     String tmp_prop_obj = "TMP_PROP_OBJ";
     String tmp_arr = "TMP_ARR";
     String tmp_map = "TMP_MAP";
-    CouchDBGenerator(SwiftGenerator g)
+    CouchBaseGenerator(SwiftGenerator g)
     {
         this.g = g;
     }

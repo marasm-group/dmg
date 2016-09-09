@@ -95,7 +95,7 @@ public class JavaGenerator implements Generator
         }
         if(couchdb)
         {
-            CouchDBGenerator g = new CouchDBGenerator(this);
+            CouchBaseGenerator g = new CouchBaseGenerator(this);
             g.generateObject(object);
         }
         if(sql)
@@ -279,7 +279,7 @@ public class JavaGenerator implements Generator
                 case to_json:
                     this.to_json = true;
                     break;
-                case couchdb:
+                case couchbase:
                     this.couchdb = true;
                     break;
                 case sql:
@@ -303,7 +303,7 @@ public class JavaGenerator implements Generator
                 case to_json:
                     this.to_json = false;
                     break;
-                case couchdb:
+                case couchbase:
                     this.couchdb = false;
                     break;
                 case sql:
@@ -326,7 +326,7 @@ public class JavaGenerator implements Generator
         }
         if(couchdb)
         {
-            file_header+=new CouchDBGenerator(this).header;
+            file_header+=new CouchBaseGenerator(this).header;
         }
         if(sql)
         {
