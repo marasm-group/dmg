@@ -26,6 +26,16 @@ public class SQL implements Generator
     {
         append(createTable(o,parent));
         append(select(o));
+        ArrayList<String> values = new ArrayList<>();
+        for (Field f : o.fields)
+        {
+            if (!f.isArray)
+            {
+                values.add(f.name);
+            }
+        }
+        append(insert(o,parent,values));
+        append(delete(o,"<id>"));
         for (Field f : o.fields)
         {
             if (f.object != null)
@@ -123,6 +133,48 @@ public class SQL implements Generator
                 res += ", PRIMARY KEY ("+ID+"));";
             }
         }
+        return res;
+    }
+
+    public String insert(DMGObject o, DMGObject parent,Collection<String> values)
+    {
+        String res = "INSERT INTO "+table(o.name)+" (";
+        for (Field f : o.fields)
+        {
+            if (!f.isArray)
+            {
+                res+= f.name+", ";
+            }
+        }
+        if(parent != null) {
+            res += parent.name + ", ";
+        }
+        res = res.substring(0,res.length()-2)+ ") VALUES (";
+        for (String v : values)
+        {
+            res += v+", ";
+        }
+        res = res.substring(0,res.length()-2)+ "); ";
+        return res;
+    }
+    public String delete(DMGObject o, String id)
+    {
+        String res = "";
+        for (Field f: o.fields)
+        {
+            if(f.object != null)
+            {
+                res += delete(f.object,"( SELECT "+f.name+" FROM "+table(o.name)+" WHERE "+o.name+" = "+id+")") + "\n";
+            }
+            else
+            {
+                if(f.isArray)
+                {
+                    res+= "DELETE FROM "+table(f.name)+" WHERE "+o.name+" = "+id+";\n";
+                }
+            }
+        }
+        res += "DELETE FROM "+table(o.name)+" WHERE "+ID+" = "+id+";";
         return res;
     }
 
